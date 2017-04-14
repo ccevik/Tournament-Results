@@ -89,7 +89,7 @@ def reportMatch(winner, loser):
                 "VALUES(%s, %s, %s);"), ((winner,), (loser,), (winner,)))
 
     conn.commit()
-    conn.close()            
+    conn.close()
 
 def swissPairings():
     """Returns a list of pairs of players for the next round of a match.
@@ -106,3 +106,24 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
+    conn = connect()
+    c = conn.cursor()
+
+    c.execute('SELECT * from last_test')
+
+    player_list = c.fetchall()
+
+    conn.commit()
+    conn.close()
+
+    result = []
+
+    for i, player in enumerate(player_list):
+        if i % 2 == 0:
+            pair = (player_list[i][0],
+                    player_list[i][1],
+                    player_list[i+1][0],
+                    player_list[i+1][1])
+            result.append(pair)
+
+    return result
